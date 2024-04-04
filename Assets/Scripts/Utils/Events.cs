@@ -2,6 +2,8 @@
 {
     public enum Events
     {
+        START,
         UPDATE,
+        TEST,
     }
 }

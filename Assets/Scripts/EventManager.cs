@@ -11,7 +11,7 @@ public class EventManager : Singleton<EventManager>
     private readonly Dictionary<Events, List<Func>> _eventListenersOuter = new Dictionary<Events, List<Func>>();
     public EventManager()
     {
-        Debug.Log("EventManager created");
+        LogManager.Log("EventManager created");
         foreach (Events eventType in Enum.GetValues(typeof(Events)))
         {
             _eventListenersInner[eventType] = new List<Func>();

@@ -21,7 +21,7 @@ namespace Utils
             if (_deltaTime >= _updateDisplayTime)
             {
                 _frameRate = _frame / _deltaTime;
-                Debug.Log(_frameRate + " " + _frame + " " + _deltaTime);
+                LogManager.Log(_frameRate + " " + _frame + " " + _deltaTime);
                 _frame = 0;
                 _deltaTime = 0;
             }

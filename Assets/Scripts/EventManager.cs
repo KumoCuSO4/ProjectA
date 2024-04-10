@@ -7,8 +7,10 @@ using Utils;
 public class EventManager : Singleton<EventManager>
 {
     public delegate void Func(params object[] values);
+    
     private readonly Dictionary<Events, List<Func>> _eventListenersInner = new Dictionary<Events, List<Func>>();
     private readonly Dictionary<Events, List<Func>> _eventListenersOuter = new Dictionary<Events, List<Func>>();
+    
     public EventManager()
     {
         LogManager.Log("EventManager created");

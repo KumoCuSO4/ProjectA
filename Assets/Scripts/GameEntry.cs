@@ -12,7 +12,7 @@ public class GameEntry : MonoBehaviour
     private PlayerManager _playerManager;
     private EventManager _eventManager;
     private FpsCounter _fpsCounter;
-    
+    private ServerManager _serverManager;
     void Start()
     {
         _playerManager = PlayerManager.Get();
@@ -21,13 +21,16 @@ public class GameEntry : MonoBehaviour
         
         // EventTest eventTest = new EventTest();
         
+        _serverManager = ServerManager.Get();
+        _serverManager.StartHost();
+        
         _eventManager.DispatchEvent(Events.START);
         LogManager.Log("Game start");
     }
 
     private void Update()
     {
-        //_eventManager.DispatchEvent(Events.UPDATE);
+        _eventManager.DispatchEvent(Events.UPDATE);
     }
 
     private static GameEntry _instance;

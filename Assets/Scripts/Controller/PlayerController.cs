@@ -2,10 +2,11 @@
 using Cinemachine;
 using Mirror;
 using UnityEngine;
+using Utils;
 
 namespace Controller
 {
-    public class PlayerController : NetworkBehaviour
+    public class PlayerController : BaseController
     {
         public float moveSpeed = 5f;
         
@@ -14,27 +15,23 @@ namespace Controller
         private PlayerManager _playerManager = PlayerManager.Get();
         private int _index = -1;
         
-        public override void OnStartLocalPlayer()
+        public PlayerController(Transform transform, bool isLocalPlayer) : base(transform)
         {
-            _virtualCamera = GameObject.FindObjectOfType<CinemachineVirtualCamera>();
-            _virtualCamera.Follow = transform;
-            _virtualCamera.LookAt = transform;
-        }
-
-        private void Start()
-        {
-            _rb = GetComponent<Rigidbody>();
+            _rb = transform.GetComponent<Rigidbody>();
             if (isLocalPlayer)
             {
-                _playerManager.SetLocalPlayer(this);
+                _virtualCamera = GameObject.FindObjectOfType<CinemachineVirtualCamera>();
+                _virtualCamera.Follow = transform;
+                _virtualCamera.LookAt = transform;
+                EventManager.Get().AddOuterListener(Events.UPDATE, Update);
             }
             else
             {
-                _playerManager.AddOtherPlayer(this);
+                
             }
         }
 
-        private void Update()
+        private void Update(params object[] values)
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
@@ -47,6 +44,10 @@ namespace Controller
         {
             _index = index;
         }
-        
+
+        public void SetName(string name)
+        {
+            transform.name = name;
+        }
     }
 }

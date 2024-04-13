@@ -1,5 +1,6 @@
 ﻿using System;
 using Cinemachine;
+using Event;
 using Mirror;
 using UnityEngine;
 using Utils;
@@ -23,7 +24,7 @@ namespace Controller
                 _virtualCamera = GameObject.FindObjectOfType<CinemachineVirtualCamera>();
                 _virtualCamera.Follow = transform;
                 _virtualCamera.LookAt = transform;
-                EventManager.Get().AddOuterListener(Events.UPDATE, Update);
+                EventManager.Get().AddListener(Events.UPDATE, Update);
             }
             else
             {
@@ -31,7 +32,7 @@ namespace Controller
             }
         }
 
-        private void Update(params object[] values)
+        private void Update()
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");

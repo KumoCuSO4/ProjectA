@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Event;
+using UnityEngine;
 
 namespace Utils
 {
@@ -11,10 +12,10 @@ namespace Utils
         
         public FpsCounter()
         {
-            EventManager.Get().AddInnerListener(Events.UPDATE, Update);
+            EventManager.Get().AddListener(Events.UPDATE, Update);
         }
 
-        public void Update(params object[] values)
+        public void Update()
         {
             _frame++;
             _deltaTime += Time.deltaTime;

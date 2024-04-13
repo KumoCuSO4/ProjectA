@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Event;
 using Test;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -19,18 +20,23 @@ public class GameEntry : MonoBehaviour
         _eventManager = EventManager.Get();
         //_fpsCounter = new FpsCounter();
         
-        // EventTest eventTest = new EventTest();
+        using (EventTest eventTest = new EventTest())
+        {
+            eventTest.Test(111);
+        }
+        _eventManager.TriggerEvent(Events.TEST, 345);
+        _eventManager.TriggerEvent(Events.TEST, 456);
         
         _serverManager = ServerManager.Get();
         _serverManager.StartHost();
         
-        _eventManager.DispatchEvent(Events.START);
+        _eventManager.TriggerEvent(Events.START);
         LogManager.Log("Game start");
     }
 
     private void Update()
     {
-        _eventManager.DispatchEvent(Events.UPDATE);
+        _eventManager.TriggerEvent(Events.UPDATE);
     }
 
     private static GameEntry _instance;

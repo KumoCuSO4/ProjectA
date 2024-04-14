@@ -1,11 +1,11 @@
 ﻿using System;
-using UnityEditor.UI;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Controller
 {
-    public abstract class BaseController : IDisposable
+    // 控制一个物体
+    public abstract class BaseController : BaseBehavior
     {
         protected Transform transform;
         protected GameObject gameObject;
@@ -21,9 +21,12 @@ namespace Controller
             return transform;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             Object.Destroy(gameObject);
+            transform = null;
+            gameObject = null;
         }
     }
 }

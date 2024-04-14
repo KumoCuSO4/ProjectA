@@ -2,6 +2,7 @@
 using Controller;
 using kcp2k;
 using Mirror;
+using Org.BouncyCastle.Bcpg;
 using UnityEngine;
 using Utils;
 
@@ -20,6 +21,7 @@ public class ServerManager : Singleton<ServerManager>
     public bool exceptionsDisconnect = true;
     
     // client
+    string networkAddress = "localhost";
     
     #endregion
     
@@ -30,7 +32,29 @@ public class ServerManager : Singleton<ServerManager>
         transport = obj.AddComponent<KcpTransport>();
         Transport.active = transport;
     }
+    
+    public void StartClient()
+    {
+        // Do checks and short circuits before setting anything up.
+        // If / when we retry, we won't have conflict issues.
+        if (NetworkClient.active)
+        {
+            LogManager.LogWarning("Client already started.");
+            return;
+        }
 
+        mode = NetworkManagerMode.ClientOnly;
+
+        SetupClient();
+
+        // In case this is a headless client...
+        ConfigureHeadlessFrameRate();
+
+        RegisterClientMessages();
+
+        NetworkClient.Connect(networkAddress);
+    }
+    
     public void StartHost()
     {
         if (NetworkServer.active || NetworkClient.active)
@@ -59,12 +83,12 @@ public class ServerManager : Singleton<ServerManager>
         
         LogManager.Log("Host Start Finish");
 
-        if (NetworkClient.isConnected && !NetworkClient.ready)
-        {
-            NetworkClient.Ready();
-            if (NetworkClient.localPlayer == null)
-                NetworkClient.AddPlayer();
-        }
+        // if (NetworkClient.isConnected && !NetworkClient.ready)
+        // {
+        //     NetworkClient.Ready();
+        //     if (NetworkClient.localPlayer == null)
+        //         NetworkClient.AddPlayer();
+        // }
     }
 
 
@@ -112,11 +136,6 @@ public class ServerManager : Singleton<ServerManager>
     void OnServerReadyMessageInternal(NetworkConnectionToClient conn, ReadyMessage msg)
     {
         //Debug.Log("NetworkManager.OnServerReadyMessageInternal");
-        OnServerReady(conn);
-    }
-    
-    public virtual void OnServerReady(NetworkConnectionToClient conn)
-    {
         if (conn.identity == null)
         {
             // this is now allowed (was not for a while)
@@ -130,17 +149,15 @@ public class ServerManager : Singleton<ServerManager>
         LogManager.Log("OnServerAddPlayerInternal");
         if (conn.identity != null)
         {
-            Debug.LogError("There is already a player for this connection.");
+            LogManager.LogError("There is already a player for this connection.");
             return;
         }
 
-        OnServerAddPlayer(conn);
-    }
-    
-    public virtual void OnServerAddPlayer(NetworkConnectionToClient conn)
-    {
-        PlayerController playerController = PlayerManager.Get().CreateLocalPlayer();
+        PlayerController playerController;
+        
+        playerController = PlayerManager.Get().CreatePlayer(conn.connectionId);
         string name = "player";
+        LogManager.LogError(conn.connectionId);
         playerController.SetName($"{name} [connId={conn.connectionId}]");
         NetworkServer.AddPlayerForConnection(conn, playerController.GetTransform().gameObject);
     }
@@ -166,13 +183,9 @@ public class ServerManager : Singleton<ServerManager>
 
     void SetupClient()
     {
-
         // apply settings before initializing anything
         NetworkClient.exceptionsDisconnect = exceptionsDisconnect;
         // NetworkClient.sendRate = clientSendRate;
-
-        if (runInBackground)
-            Application.runInBackground = true;
     }
     
     void RegisterClientMessages()
@@ -192,6 +205,7 @@ public class ServerManager : Singleton<ServerManager>
 
         if (!NetworkClient.ready)
             NetworkClient.Ready();
+        NetworkClient.AddPlayer();
     }
     
     void OnClientDisconnectInternal()

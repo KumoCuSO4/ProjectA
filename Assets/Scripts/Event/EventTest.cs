@@ -3,7 +3,7 @@ using Event;
 using UnityEngine;
 using Utils;
 
-namespace Test
+namespace Event
 {
     public class EventTest : IMyDisposable
     {

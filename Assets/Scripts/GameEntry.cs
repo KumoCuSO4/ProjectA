@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Event;
-using Test;
-using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 
@@ -14,23 +9,19 @@ public class GameEntry : MonoBehaviour
     private EventManager _eventManager;
     private FpsCounter _fpsCounter;
     private ServerManager _serverManager;
+    private WindowManager _windowManager;
     void Start()
     {
         _playerManager = PlayerManager.Get();
         _eventManager = EventManager.Get();
         //_fpsCounter = new FpsCounter();
         
-        using (EventTest eventTest = new EventTest())
-        {
-            eventTest.Test(111);
-        }
-        _eventManager.TriggerEvent(Events.TEST, 345);
-        _eventManager.TriggerEvent(Events.TEST, 456);
-        
         _serverManager = ServerManager.Get();
-        _serverManager.StartHost();
-        
-        _eventManager.TriggerEvent(Events.START);
+        // _serverManager.StartHost();
+        // _serverManager.StartClient();
+
+        _windowManager = WindowManager.Get();
+        _windowManager.OpenWindow("connect_window");
         LogManager.Log("Game start");
     }
 

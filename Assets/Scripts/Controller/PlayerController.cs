@@ -14,21 +14,34 @@ namespace Controller
         private Rigidbody _rb;
         private CinemachineVirtualCamera _virtualCamera;
         private PlayerManager _playerManager = PlayerManager.Get();
-        private int _index = -1;
+        private int _id = -1;
+        private bool init = false;
+        private bool isLocalPlayer = false;
+        private PlayerNetworkBehavior _playerNetworkBehavior;
         
-        public PlayerController(Transform transform, bool isLocalPlayer) : base(transform)
+        public PlayerController(Transform transform) : base(transform)
         {
             _rb = transform.GetComponent<Rigidbody>();
+            _playerNetworkBehavior = base.transform.GetComponent<PlayerNetworkBehavior>();
+            _playerNetworkBehavior.SetPlayerController(this);
+        }
+
+        public void OnPlayerSpawn(bool isLocalPlayer)
+        {
+            if (init) return;
+            init = true;
+            this.isLocalPlayer = isLocalPlayer;
             if (isLocalPlayer)
             {
                 _virtualCamera = GameObject.FindObjectOfType<CinemachineVirtualCamera>();
                 _virtualCamera.Follow = transform;
                 _virtualCamera.LookAt = transform;
                 EventManager.Get().AddListener(Events.UPDATE, Update);
+                _playerManager.AddLocalPlayer(this);
             }
             else
             {
-                
+                _playerManager.AddOtherPlayer(this);
             }
         }
 
@@ -41,9 +54,14 @@ namespace Controller
             _rb.velocity = movement * moveSpeed;
         }
 
-        public void SetIndex(int index)
+        public void SetID(int id)
         {
-            _index = index;
+            _id = id;
+        }
+
+        public int GetID()
+        {
+            return _id;
         }
 
         public void SetName(string name)

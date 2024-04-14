@@ -7,7 +7,7 @@ using Utils;
 public class PlayerManager : Singleton<PlayerManager>
 {
     private PlayerController localPlayer;
-    private List<PlayerController> otherPlayers = new List<PlayerController>();
+    private Dictionary<int, PlayerController> otherPlayers = new Dictionary<int, PlayerController>();
     private int _playerNum = 0;
     public GameObject playerPrefab { get; private set; }
     
@@ -17,21 +17,26 @@ public class PlayerManager : Singleton<PlayerManager>
         LogManager.Log("PlayerManager created");
     }
     
-    public PlayerController CreateLocalPlayer()
+    public PlayerController CreatePlayer(int id)
+    {
+        LogManager.Log("CreateLocalPlayer");
+        GameObject player = Object.Instantiate(playerPrefab, Vector3.up * 2, Quaternion.identity);
+        PlayerController playerController = new PlayerController(player.transform);
+        playerController.SetID(id);
+        _playerNum++;
+        return playerController;
+    }
+    
+    public bool AddLocalPlayer(PlayerController playerController)
     {
         if (localPlayer != null)
         {
             LogManager.TraceE("LocalPlayer Set Duplicate");
-            return localPlayer;
+            return false;
         }
-        
-        LogManager.Log("CreateLocalPlayer");
-        GameObject player = Object.Instantiate(playerPrefab, Vector3.up * 2, Quaternion.identity);
-        PlayerController playerController = new PlayerController(player.transform, true);
+
         localPlayer = playerController;
-        playerController.SetIndex(_playerNum);
-        _playerNum++;
-        return playerController;
+        return true;
     }
 
     public PlayerController GetLocalPlayer()
@@ -39,16 +44,21 @@ public class PlayerManager : Singleton<PlayerManager>
         return localPlayer;
     }
 
-    public void AddOtherPlayer(PlayerController player)
+    public bool AddOtherPlayer(PlayerController playerController)
     {
-        LogManager.Log("AddOtherPlayer");
-        otherPlayers.Add(player);
-        player.SetIndex(_playerNum);
-        _playerNum++;
+        int id = playerController.GetID();
+        if (otherPlayers.ContainsKey(id))
+        {
+            LogManager.TraceE("OtherPlayer Duplicate");
+            return false;
+        }
+
+        otherPlayers[id] = playerController;
+        return true;
     }
 
-    public List<PlayerController> GetOtherPlayers()
+    public PlayerController GetOtherPlayer(int id)
     {
-        return otherPlayers;
+        return otherPlayers[id];
     }
 }

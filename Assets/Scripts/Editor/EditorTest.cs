@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Reflection;
+using Event;
 using UnityEditor;
 using UnityEngine;
 
-namespace Test
+namespace Editor
 {
     public class EditorTest : EditorWindow
     {
@@ -17,18 +18,14 @@ namespace Test
         {
             if (GUILayout.Button("Click Test"))
             {
-                MethodInfo methodInfo = typeof(TestClass).GetMethod("MethodTest", BindingFlags.Instance | BindingFlags.Public);
-                object[] objects = { 1, 2 };
-                methodInfo.Invoke(new TestClass(), objects);
+                using (EventTest eventTest = new EventTest())
+                {
+                    eventTest.Test(111);
+                }
+                EventManager _eventManager = EventManager.Get();
+                _eventManager.TriggerEvent(Events.TEST, 345);
+                _eventManager.TriggerEvent(Events.TEST, 456);
             }
-        }
-    }
-
-    public class TestClass
-    {
-        public void MethodTest(int a, int b)
-        {
-            LogManager.Log(a,b);
         }
     }
 }

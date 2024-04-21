@@ -158,7 +158,7 @@ public class ServerManager : Singleton<ServerManager>
         playerController = PlayerManager.Get().CreatePlayer(conn.connectionId);
         string name = "player";
         LogManager.LogError(conn.connectionId);
-        playerController.SetName($"{name} [connId={conn.connectionId}]");
+        playerController.ServerSetupPlayer($"{name} [connId={conn.connectionId}]");
         NetworkServer.AddPlayerForConnection(conn, playerController.GetTransform().gameObject);
     }
     

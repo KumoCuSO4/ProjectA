@@ -6,6 +6,28 @@ public class PlayerNetworkBehavior : NetworkBehaviour
 {
     private PlayerController _playerController;
     private NetworkIdentity _identity;
+    
+    [SyncVar(hook = nameof(OnPlayerNameChanged))]
+    private string _playerName;
+
+    private void OnPlayerNameChanged(string oldStr, string newStr)
+    {
+        LogManager.LogError(oldStr, newStr);
+        _playerController.OnPlayerNameChanged(oldStr, newStr);
+    }
+
+    [Command]
+    public void CmdChangeName(string playerName)
+    {
+        _playerName = playerName;
+    }
+
+    [Server]
+    public void ServerSetupPlayer(string playerName)
+    {
+        _playerName = playerName;
+    }
+
     public void SetPlayerController(PlayerController playerController)
     {
         _playerController = playerController;
@@ -17,15 +39,19 @@ public class PlayerNetworkBehavior : NetworkBehaviour
         if (_playerController == null)
         {
             _identity = GetComponent<NetworkIdentity>();
-            int id = Random.Range(1, 100); // TODO
-            LogManager.LogError(id);
             _playerController = new PlayerController(transform);
-            _playerController.SetID(id);
-            _playerController.OnPlayerSpawn(isLocalPlayer);
         }
-        else
+
+        _playerController.OnPlayerSpawn(isLocalPlayer);
+    }
+
+    public override void OnDeserialize(NetworkReader reader, bool initialState)
+    {
+        if (_playerController == null)
         {
-            _playerController.OnPlayerSpawn(isLocalPlayer);
+            _identity = GetComponent<NetworkIdentity>();
+            _playerController = new PlayerController(transform);
         }
+        base.OnDeserialize(reader, initialState);
     }
 }

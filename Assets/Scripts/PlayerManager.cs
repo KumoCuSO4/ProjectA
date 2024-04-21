@@ -19,10 +19,9 @@ public class PlayerManager : Singleton<PlayerManager>
     
     public PlayerController CreatePlayer(int id)
     {
-        LogManager.Log("CreateLocalPlayer");
+        LogManager.Log("CreateLocalPlayer", id);
         GameObject player = Object.Instantiate(playerPrefab, Vector3.up * 2, Quaternion.identity);
         PlayerController playerController = new PlayerController(player.transform);
-        playerController.SetID(id);
         _playerNum++;
         return playerController;
     }

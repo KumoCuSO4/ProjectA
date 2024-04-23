@@ -14,7 +14,7 @@ public class PlayerManager : Singleton<PlayerManager>
     public PlayerManager()
     {
         playerPrefab = (GameObject)Resources.Load("Prefabs/player");
-        LogManager.Log("PlayerManager created");
+        // LogManager.Log("PlayerManager created");
     }
     
     public PlayerController CreatePlayer(int id)

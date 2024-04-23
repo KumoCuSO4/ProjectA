@@ -1,7 +1,17 @@
-﻿namespace Controller.Item
+﻿using UnityEngine;
+using Utils;
+
+namespace Controller.Item
 {
-    public class BaseItem
+    public abstract class BaseItem : BaseController, IInteractable
     {
-        
+        public BaseItem(Transform transform) : base(transform)
+        {
+        }
+
+        public virtual bool Interact(PlayerController playerController)
+        {
+            return false;
+        }
     }
 }

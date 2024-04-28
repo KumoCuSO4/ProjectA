@@ -3,29 +3,32 @@ using Utils;
 
 namespace Table
 {
-    public class ItemTable : Singleton<ItemManager>
+    public class ItemTable : Singleton<ItemTable>
     {
         private Dictionary<int, ItemData> data = new Dictionary<int, ItemData>();
 
         public ItemTable()
         {
-            data[1] = new ItemData("Item1", 10);
+            data[1] = new ItemData("Item1", "item_1", 10);
         }
 
         public ItemData GetItemData(int itemID)
         {
             return data[itemID];
         }
+        
     }
 
     public class ItemData
     {
-        public string name { private set; get; }
+        public string className { private set; get; }
+        public string prefabName { private set; get; }
         public int value { private set; get; }
 
-        public ItemData(string name, int value)
+        public ItemData(string className, string prefabName, int value)
         {
-            this.name = name;
+            this.className = className;
+            this.prefabName = prefabName;
             this.value = value;
         } 
     }

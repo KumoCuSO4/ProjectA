@@ -51,7 +51,8 @@ public class WindowManager : Singleton<WindowManager>
         GameObject windowPrefab = Resources.Load<GameObject>("Prefabs/Window/" + windowName);
         GameObject obj = Object.Instantiate(windowPrefab, windowRoot);
         obj.transform.localPosition = Vector3.zero;
-        window = Activator.CreateInstance(type, obj.transform, windowName) as BaseWindow;
+        object[] constructorArgs = { obj, windowName };
+        window = Activator.CreateInstance(type, constructorArgs) as BaseWindow;
         return window;
     }
     

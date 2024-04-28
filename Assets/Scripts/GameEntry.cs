@@ -1,5 +1,6 @@
 using Controller.Window;
 using Event;
+using Manager;
 using UnityEngine;
 using Utils;
 
@@ -10,6 +11,8 @@ public class GameEntry : MonoBehaviour
     private EventManager _eventManager;
     private FpsCounter _fpsCounter;
     private ServerManager _serverManager;
+    private ControllerManager _controllerManager;
+    private ItemManager _itemManager;
     private WindowManager _windowManager;
     void Start()
     {
@@ -21,8 +24,12 @@ public class GameEntry : MonoBehaviour
         // _serverManager.StartHost();
         // _serverManager.StartClient();
 
+        _controllerManager = ControllerManager.Get();
+        _itemManager = ItemManager.Get();
+
         _windowManager = WindowManager.Get();
         _windowManager.OpenWindow("connect_window");
+        
         LogManager.Log("Game start");
     }
 

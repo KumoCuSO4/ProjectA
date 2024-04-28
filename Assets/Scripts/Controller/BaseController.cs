@@ -1,4 +1,5 @@
 ﻿using System;
+using Manager;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -9,11 +10,14 @@ namespace Controller
     {
         protected Transform transform;
         protected GameObject gameObject;
+        protected ControllerManager _controllerManager;
         
-        public BaseController(Transform transform)
+        public BaseController(GameObject gameObject)
         {
-            this.transform = transform;
-            gameObject = this.transform.gameObject;
+            _controllerManager = ControllerManager.Get();
+            this.gameObject = gameObject;
+            this.transform = this.gameObject.transform;
+            _controllerManager.SetController(gameObject, this);
         }
 
         public Transform GetTransform()

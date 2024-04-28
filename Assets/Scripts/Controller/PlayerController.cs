@@ -1,6 +1,8 @@
 ﻿using System;
 using Cinemachine;
+using Controller.Item;
 using Event;
+using Manager;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,8 +26,10 @@ namespace Controller
         private string _playerName;
         private Canvas _canvas;
         private Text _nameText;
+
+        private BaseItem carryItem;
         
-        public PlayerController(Transform transform) : base(transform)
+        public PlayerController(GameObject gameObject) : base(gameObject)
         {
             _rb = transform.GetComponent<Rigidbody>();
             _playerNetworkBehavior = base.transform.GetComponent<PlayerNetworkBehavior>();
@@ -56,17 +60,71 @@ namespace Controller
 
         private void LocalPlayerUpdate()
         {
+            #region Move
+
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
-
-            Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
-            _rb.velocity = movement * moveSpeed;
+            Vector3 direction = new Vector3(moveHorizontal, 0, moveVertical);
+            if (direction.magnitude > 0.2f)
+            {
+                Vector3 movement = direction * moveSpeed * Time.deltaTime;
+                Vector3 localPosition;
+                Quaternion localRotation;
+                transform.GetLocalPositionAndRotation(out localPosition, out localRotation);
+                localRotation.SetLookRotation(direction);
+                localPosition = localPosition + movement;
+                transform.SetLocalPositionAndRotation(localPosition, localRotation);
+            }
+            
+            #endregion
+            
 
             if (Input.GetKeyDown(KeyCode.C))
             {
                 SetName(Random.Range(0, 100).ToString());
             }
+            
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                ItemManager.Get().CreateItem(1);
+            }
+            
             _canvas.transform.LookAt(_virtualCamera.transform);
+
+            if (carryItem == null)
+            {
+                Ray ray = new Ray(transform.position, transform.forward);
+                RaycastHit hit;
+    
+                float distance = 10f;
+                if (Physics.Raycast(ray, out hit, distance))
+                {
+                    GameObject go = hit.collider.gameObject;
+                    BaseController controller = ControllerManager.Get().GetController(go);
+                    if (controller is BaseItem item)
+                    {
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            if (item.Carry(this))
+                            {
+                                carryItem = item;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                carryItem.GetTransform().position = transform.position + transform.forward;
+                
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    if (carryItem.Drop(this))
+                    {
+                        carryItem = null;
+                    }
+                }
+            }
         }
 
         private void OtherPlayerUpdate()

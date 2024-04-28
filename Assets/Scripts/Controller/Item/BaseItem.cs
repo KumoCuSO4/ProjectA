@@ -3,14 +3,63 @@ using Utils;
 
 namespace Controller.Item
 {
-    public abstract class BaseItem : BaseController, IInteractable
+    public abstract class BaseItem : BaseController, ICarriable
     {
-        public BaseItem(Transform transform) : base(transform)
+        enum ItemState
         {
+            DEFAULT,
+            CARRY,
+            DISABLED,
         }
 
-        public virtual bool Interact(PlayerController playerController)
+        private ItemState _itemState = ItemState.DEFAULT;
+        private Collider _collider;
+        
+        public BaseItem(GameObject gameObject) : base(gameObject)
         {
+            _collider = base.transform.GetComponent<Collider>();
+        }
+        
+        public virtual bool Carry(PlayerController playerController)
+        {
+            if (CanCarry(playerController))
+            {
+                _itemState = ItemState.CARRY;
+                _collider.enabled = false;
+                return true;
+            }
+
+            return false;
+        }
+
+        public virtual bool Drop(PlayerController playerController)
+        {
+            if (CanDrop(playerController))
+            {
+                _itemState = ItemState.DEFAULT;
+                _collider.enabled = true;
+                return true;
+            }
+            return false;
+        }
+
+        public virtual bool CanCarry(PlayerController playerController)
+        {
+            if (_itemState == ItemState.DEFAULT)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public virtual bool CanDrop(PlayerController playerController)
+        {
+            if (_itemState == ItemState.CARRY)
+            {
+                return true;
+            }
+
             return false;
         }
     }

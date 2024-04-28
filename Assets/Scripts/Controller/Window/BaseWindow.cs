@@ -7,7 +7,7 @@ namespace Controller.Window
     {
         private string windowName;
         
-        public BaseWindow(Transform transform, string windowName) : base(transform)
+        public BaseWindow(GameObject gameObject, string windowName) : base(gameObject)
         {
             this.windowName = windowName;
             InitWindow();

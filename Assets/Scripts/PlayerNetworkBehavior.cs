@@ -39,7 +39,7 @@ public class PlayerNetworkBehavior : NetworkBehaviour
         if (_playerController == null)
         {
             _identity = GetComponent<NetworkIdentity>();
-            _playerController = new PlayerController(transform);
+            _playerController = new PlayerController(gameObject);
         }
 
         _playerController.OnPlayerSpawn(isLocalPlayer);
@@ -50,7 +50,7 @@ public class PlayerNetworkBehavior : NetworkBehaviour
         if (_playerController == null)
         {
             _identity = GetComponent<NetworkIdentity>();
-            _playerController = new PlayerController(transform);
+            _playerController = new PlayerController(gameObject);
         }
         base.OnDeserialize(reader, initialState);
     }

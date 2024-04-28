@@ -8,7 +8,7 @@ namespace Controller.Window
         private Button hostBtn;
         private Button clientBtn;
         
-        public ConnectWindow(Transform transform, string windowName) : base(transform, windowName)
+        public ConnectWindow(GameObject gameObject, string windowName) : base(gameObject, windowName)
         {
         }
 

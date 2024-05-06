@@ -2,6 +2,7 @@
 using Cinemachine;
 using Controller.Item;
 using Event;
+using JetBrains.Annotations;
 using Manager;
 using Mirror;
 using UnityEngine;
@@ -27,8 +28,11 @@ namespace Controller
         private Canvas _canvas;
         private Text _nameText;
 
+        private float aimDistance = 5f;
+        private GameObject aimTarget;
+        private BaseController aimTargetController;
         private BaseItem carryItem;
-        
+
         public PlayerController(GameObject gameObject) : base(gameObject)
         {
             _rb = transform.GetComponent<Rigidbody>();
@@ -96,37 +100,89 @@ namespace Controller
                 Ray ray = new Ray(transform.position, transform.forward);
                 RaycastHit hit;
     
-                float distance = 10f;
-                if (Physics.Raycast(ray, out hit, distance))
+                if (Physics.Raycast(ray, out hit, aimDistance))
                 {
                     GameObject go = hit.collider.gameObject;
-                    BaseController controller = ControllerManager.Get().GetController(go);
-                    if (controller is BaseItem item)
-                    {
-                        if (Input.GetKeyDown(KeyCode.E))
-                        {
-                            if (item.Carry(this))
-                            {
-                                carryItem = item;
-                            }
-                        }
-                    }
+                    AimTarget(go);
+                }
+                else
+                {
+                    UnAimTarget();
                 }
             }
             else
             {
                 carryItem.GetTransform().position = transform.position + transform.forward;
-                
-                if (Input.GetKeyDown(KeyCode.Q))
+            }
+            
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (carryItem == null && aimTargetController != null && aimTargetController is BaseItem item)
                 {
-                    if (carryItem.Drop(this))
+                    if (item.Carry(this))
                     {
-                        carryItem = null;
+                        carryItem = item;
+                        UnAimTarget();
                     }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                if (carryItem != null && carryItem.Drop(this))
+                {
+                    carryItem = null;
                 }
             }
         }
 
+        private void AimTarget(GameObject go)
+        {
+            if (aimTarget != go)
+            {
+                if (aimTarget != null)
+                {
+                    Outline outline1 = aimTarget.GetComponent<Outline>();
+                    if (outline1 == null)
+                    {
+                        outline1 = aimTarget.AddComponent<Outline>();
+                        outline1.OutlineColor = Color.red;
+                    }
+                    outline1.enabled = false;
+                }
+
+                if (go != null)
+                {
+                    Outline outline2 = go.GetComponent<Outline>();
+                    if (outline2 == null)
+                    {
+                        outline2 = go.AddComponent<Outline>();
+                        outline2.OutlineColor = Color.red;
+                    }
+                    outline2.enabled = true;
+                }
+
+                aimTarget = go;
+                aimTargetController = ControllerManager.Get().GetController(go);
+            }
+        }
+
+        private void UnAimTarget()
+        {
+            if (aimTarget != null)
+            {
+                Outline outline1 = aimTarget.GetComponent<Outline>();
+                if (outline1 == null)
+                {
+                    outline1 = aimTarget.AddComponent<Outline>();
+                    outline1.OutlineColor = Color.red;
+                }
+                outline1.enabled = false;
+                
+                aimTarget = null;
+                aimTargetController = null;
+            }
+        }
+        
         private void OtherPlayerUpdate()
         {
             _canvas.transform.LookAt(_virtualCamera.transform);

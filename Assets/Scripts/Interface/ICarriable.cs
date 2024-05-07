@@ -1,6 +1,6 @@
 ﻿using Controller;
 
-namespace Utils
+namespace Interface
 {
     public interface ICarriable
     {

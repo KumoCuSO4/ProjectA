@@ -21,6 +21,10 @@ public class ItemManager : Singleton<ItemManager>
     {
         ItemData itemData = ItemTable.Get().GetItemData(itemID);
         string className = itemData.className;
+        if (className == null)
+        {
+            className = "BaseItem";
+        }
         Type type = Type.GetType("Controller.Item." + className);
         if (type == null)
         {

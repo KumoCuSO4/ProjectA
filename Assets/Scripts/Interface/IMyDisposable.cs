@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Utils
+namespace Interface
 {
     public interface IMyDisposable : IDisposable
     {

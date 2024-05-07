@@ -9,7 +9,7 @@ namespace Table
 
         public ItemTable()
         {
-            data[1] = new ItemData("Item1", "item_1", 10);
+            data[1] = new ItemData(null, "item_1", 10);
         }
 
         public ItemData GetItemData(int itemID)

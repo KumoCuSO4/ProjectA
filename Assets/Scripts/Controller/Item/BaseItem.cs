@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Interface;
+using UnityEngine;
 using Utils;
 
 namespace Controller.Item
 {
-    public abstract class BaseItem : BaseController, ICarriable
+    public class BaseItem : BaseController, ICarriable
     {
         enum ItemState
         {

@@ -2,7 +2,6 @@
 using Event;
 using Interface;
 using UnityEngine;
-using Utils;
 
 namespace Event
 {

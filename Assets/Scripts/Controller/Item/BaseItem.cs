@@ -1,6 +1,5 @@
 ﻿using Interface;
 using UnityEngine;
-using Utils;
 
 namespace Controller.Item
 {

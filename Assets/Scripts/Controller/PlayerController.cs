@@ -7,7 +7,6 @@ using Manager;
 using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
-using Utils;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 

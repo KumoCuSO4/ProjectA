@@ -1,12 +1,28 @@
 ﻿using Controller;
+using UnityEngine;
 
-namespace Utils
+public static class Utils
 {
-    public static class Utils
+    public static PlayerController GetLocalPlayer()
     {
-        public static PlayerController GetLocalPlayer()
+        return PlayerManager.Get().GetLocalPlayer();
+    }
+
+    public static GameObject AddChild(GameObject parent, GameObject obj)
+    {
+        GameObject instance = Object.Instantiate(obj, parent.transform);
+        return instance;
+    }
+
+    public static GameObject AddChild(GameObject parent, string name)
+    {
+        GameObject go = new GameObject(name)
         {
-            return PlayerManager.Get().GetLocalPlayer();
-        }
+            transform =
+            {
+                parent = parent.transform
+            }
+        };
+        return go;
     }
 }

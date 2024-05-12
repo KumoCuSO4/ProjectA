@@ -1,9 +1,9 @@
 ﻿
 using Controller;
 using kcp2k;
+using Manager;
 using Mirror;
 using UnityEngine;
-using Utils;
 
 public class ServerManager : Singleton<ServerManager>
 {
@@ -156,7 +156,7 @@ public class ServerManager : Singleton<ServerManager>
         
         playerController = PlayerManager.Get().CreatePlayer(conn.connectionId);
         string name = "player";
-        LogManager.LogError(conn.connectionId);
+        // LogManager.LogError(conn.connectionId);
         playerController.ServerSetupPlayer($"{name} [connId={conn.connectionId}]");
         NetworkServer.AddPlayerForConnection(conn, playerController.GetTransform().gameObject);
     }
@@ -205,6 +205,8 @@ public class ServerManager : Singleton<ServerManager>
         if (!NetworkClient.ready)
             NetworkClient.Ready();
         NetworkClient.AddPlayer();
+        
+        SceneManager.Get().EnterScene(Const.SceneID.SCENE1);
     }
     
     void OnClientDisconnectInternal()

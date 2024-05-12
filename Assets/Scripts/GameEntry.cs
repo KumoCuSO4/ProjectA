@@ -2,7 +2,6 @@ using Controller.Window;
 using Event;
 using Manager;
 using UnityEngine;
-using Utils;
 
 public class GameEntry : MonoBehaviour
 {

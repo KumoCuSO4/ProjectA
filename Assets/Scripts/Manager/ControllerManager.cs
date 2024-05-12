@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Controller;
 using UnityEngine;
-using Utils;
 
 namespace Manager
 {

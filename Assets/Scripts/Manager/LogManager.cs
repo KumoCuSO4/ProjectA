@@ -1,7 +1,6 @@
 ﻿
 using System.Text;
 using UnityEngine;
-using Utils;
 
 public static class LogManager
 {

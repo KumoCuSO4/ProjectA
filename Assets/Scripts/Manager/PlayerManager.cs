@@ -2,7 +2,6 @@
 using Controller;
 using Mirror;
 using UnityEngine;
-using Utils;
 
 public class PlayerManager : Singleton<PlayerManager>
 {

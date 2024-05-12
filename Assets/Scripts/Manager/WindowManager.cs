@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Controller.Window;
 using Table;
 using UnityEngine;
-using Utils;
 using Object = UnityEngine.Object;
 
 public class WindowManager : Singleton<WindowManager>

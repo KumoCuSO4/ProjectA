@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Controller;
 using Controller.Scene;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Manager
@@ -34,6 +35,7 @@ namespace Manager
             return _curSceneID;
         }
 
+        [CanBeNull]
         public BaseScene GetCurScene()
         {
             return _curScene;

@@ -17,5 +17,10 @@ namespace Manager
         {
             return _controllers.TryGetValue(gameObject, out var controller) ? controller : null;
         }
+        
+        public void RemoveController(GameObject gameObject)
+        {
+            _controllers.Remove(gameObject);
+        }
     }
 }

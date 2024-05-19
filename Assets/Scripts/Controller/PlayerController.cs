@@ -31,6 +31,7 @@ namespace Controller
         private GameObject aimTarget;
         private BaseController aimTargetController;
         private BaseItem carryItem;
+        private PlaceGridController _curPlaceGrid;
 
         public PlayerController(GameObject gameObject) : base(gameObject)
         {
@@ -132,6 +133,34 @@ namespace Controller
                     carryItem = null;
                 }
             }
+            
+            var scenePlaceGrid = SceneManager.Get().GetCurScene()?.GetScenePlaceGrid();
+            var placeGridController = scenePlaceGrid?.GetPlaceGridController(transform.position);
+            if (placeGridController != _curPlaceGrid)
+            {
+                _curPlaceGrid = placeGridController;
+                EventManager.Get().TriggerEvent(Events.ON_PLACE_GRID_CHANGE);
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                var placeWindow = WindowManager.Get().GetWindow("place_window");
+                if (placeWindow == null)
+                {
+                    if (_curPlaceGrid != null)
+                    {
+                        WindowManager.Get().OpenWindow("place_window", _curPlaceGrid);
+                    }
+                }
+                else
+                {
+                    WindowManager.Get().CloseWindow("place_window");
+                }
+            }
+        }
+
+        public PlaceGridController GetCurPlaceGrid()
+        {
+            return _curPlaceGrid;
         }
 
         private void AimTarget(GameObject go)

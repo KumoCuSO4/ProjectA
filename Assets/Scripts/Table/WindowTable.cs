@@ -9,6 +9,8 @@ namespace Table
         public WindowTable()
         {
             data["connect_window"] = new WindowData("ConnectWindow", 2);
+            data["main_window"] = new WindowData("MainWindow", 2);
+            data["place_window"] = new WindowData("PlaceWindow", 2);
         }
 
         public WindowData GetWindowData(string windowName)

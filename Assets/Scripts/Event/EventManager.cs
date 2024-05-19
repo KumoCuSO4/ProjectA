@@ -14,7 +14,7 @@ namespace Event
     
         public EventManager()
         {
-            LogManager.Log("EventManager created");
+            // LogManager.Log("EventManager created");
             for (int i = 0; i < MAX_PRI; i++)
             {
                 _eventListeners[i] = new Dictionary<Events, Delegate>();
@@ -113,7 +113,7 @@ namespace Event
                     object obj = ((Action<T>)function).Target;
                     if (obj is IMyDisposable disposable && disposable.IsDisposed())
                     {
-                        LogManager.LogError("类已回收");
+                        // LogManager.LogError("类已回收");
                         RemoveListener<T>(eventType, (Action<T>)function, (EventPriority)i);
                     }
                     else
@@ -142,7 +142,7 @@ namespace Event
                     object obj = ((Action)function).Target;
                     if (obj is IMyDisposable disposable && disposable.IsDisposed())
                     {
-                        LogManager.LogError("类已回收");
+                        // LogManager.LogError("类已回收");
                         RemoveListener(eventType, (Action)function, (EventPriority)i);
                     }
                     else

@@ -27,10 +27,11 @@ namespace Controller
 
         public override void Dispose()
         {
-            base.Dispose();
+            _controllerManager.RemoveController(gameObject);
             Object.Destroy(gameObject);
             transform = null;
             gameObject = null;
+            base.Dispose();
         }
     }
 }

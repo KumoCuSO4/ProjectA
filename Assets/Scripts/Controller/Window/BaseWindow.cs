@@ -10,7 +10,6 @@ namespace Controller.Window
         public BaseWindow(GameObject gameObject, string windowName) : base(gameObject)
         {
             this.windowName = windowName;
-            InitWindow();
         }
 
         public string GetWindowName()
@@ -18,7 +17,17 @@ namespace Controller.Window
             return windowName;
         }
 
-        protected virtual void InitWindow()
+        public virtual void InitWindow()
+        {
+            
+        }
+        
+        public virtual void WillClose()
+        {
+            
+        }
+        
+        public virtual void DidClose()
         {
             
         }

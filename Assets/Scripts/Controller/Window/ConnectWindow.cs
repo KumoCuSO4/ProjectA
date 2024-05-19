@@ -12,7 +12,7 @@ namespace Controller.Window
         {
         }
 
-        protected override void InitWindow()
+        public override void InitWindow()
         {
             base.InitWindow();
             hostBtn = transform.Find("host_btn").GetComponent<Button>();
@@ -20,11 +20,13 @@ namespace Controller.Window
             hostBtn.onClick.AddListener(() =>
             {
                 ServerManager.Get().StartHost();
+                WindowManager.Get().OpenWindow("main_window");
                 WindowManager.Get().CloseWindow(this);
             });
             clientBtn.onClick.AddListener(() =>
             {
                 ServerManager.Get().StartClient();
+                WindowManager.Get().OpenWindow("main_window");
                 WindowManager.Get().CloseWindow(this);
             });
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controller.Window;
 using Table;
 using UnityEngine;
@@ -30,7 +31,7 @@ public class WindowManager : Singleton<WindowManager>
         return window;
     }
     
-    public BaseWindow OpenWindow(string windowName)
+    public BaseWindow OpenWindow(string windowName, params object[] windowParams)
     {
         BaseWindow window = GetWindow(windowName);
         if (window != null)
@@ -51,19 +52,18 @@ public class WindowManager : Singleton<WindowManager>
         GameObject obj = Object.Instantiate(windowPrefab, windowRoot);
         obj.transform.localPosition = Vector3.zero;
         object[] constructorArgs = { obj, windowName };
+        
+        constructorArgs = constructorArgs.Concat(windowParams).ToArray();
         window = Activator.CreateInstance(type, constructorArgs) as BaseWindow;
+        windows[windowName] = window;
+        window.InitWindow();
         return window;
     }
     
     public void CloseWindow(string windowName)
     {
         BaseWindow window = GetWindow(windowName);
-        if (window == null)
-        {
-            return;
-        }
-        window.Dispose();
-        windows.Remove(windowName);
+        CloseWindow(window);
     }
     
     public void CloseWindow(BaseWindow window)
@@ -72,6 +72,7 @@ public class WindowManager : Singleton<WindowManager>
         {
             return;
         }
+        window.WillClose();
         window.Dispose();
         windows.Remove(window.GetWindowName());
     }

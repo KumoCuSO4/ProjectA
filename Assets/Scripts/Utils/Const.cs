@@ -6,4 +6,9 @@ public static class Const
         NONE,
         SCENE1,
     }
+    
+    public enum Layer
+    {
+        GROUND = 6,
+    }
 }

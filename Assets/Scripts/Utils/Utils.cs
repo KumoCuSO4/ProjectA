@@ -1,8 +1,10 @@
 ﻿using Controller;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public static class Utils
 {
+    [CanBeNull]
     public static PlayerController GetLocalPlayer()
     {
         return PlayerManager.Get().GetLocalPlayer();
@@ -20,7 +22,8 @@ public static class Utils
         {
             transform =
             {
-                parent = parent.transform
+                parent = parent.transform,
+                localPosition = Vector3.zero
             }
         };
         return go;

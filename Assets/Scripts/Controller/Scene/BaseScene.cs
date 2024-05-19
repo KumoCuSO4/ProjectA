@@ -1,4 +1,6 @@
 ﻿using Controller.Item;
+using Controller.Placeable;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Controller.Scene
@@ -33,6 +35,11 @@ namespace Controller.Scene
         public BaseItem CreateItem(int itemID)
         {
             return _sceneItem.CreateItem(itemID);
+        }
+
+        public ScenePlaceGrid GetScenePlaceGrid()
+        {
+            return _scenePlaceGrid;
         }
     }
 }

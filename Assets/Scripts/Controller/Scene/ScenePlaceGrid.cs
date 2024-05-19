@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Controller.Scene
@@ -21,6 +22,20 @@ namespace Controller.Scene
                 placeGridController.Dispose();
             }
             base.Dispose();
+        }
+
+        [CanBeNull]
+        public PlaceGridController GetPlaceGridController(Vector3 position)
+        {
+            foreach (var placeGridController in _placeGridControllers)
+            {
+                if (placeGridController.IsPositionInside(position))
+                {
+                    return placeGridController;
+                }
+            }
+
+            return null;
         }
     }
 }

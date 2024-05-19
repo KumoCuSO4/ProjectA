@@ -10,5 +10,7 @@
         START,
         UPDATE,
         TEST,
+        
+        ON_PLACE_GRID_CHANGE,
     }
 }

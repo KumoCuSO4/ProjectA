@@ -1,5 +1,6 @@
 ﻿using Controller;
 using JetBrains.Annotations;
+using Player;
 using UnityEngine;
 
 public static class Utils

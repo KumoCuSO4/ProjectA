@@ -1,8 +1,8 @@
 ﻿using System;
 using Cinemachine;
+using Controller;
 using Controller.Item;
 using Event;
-using JetBrains.Annotations;
 using Manager;
 using Mirror;
 using UnityEngine;
@@ -10,18 +10,18 @@ using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Controller
+namespace Player
 {
     public class PlayerController : BaseController
     {
-        public float moveSpeed = 5f;
+        public float moveSpeed = 10f;
         
         private Rigidbody _rb;
-        private CinemachineVirtualCamera _virtualCamera;
+        // private CinemachineVirtualCamera _virtualCamera;
         private PlayerManager _playerManager = PlayerManager.Get();
         private int _id = -1;
         private bool init = false;
-        private bool isLocalPlayer = false;
+        public bool isLocalPlayer { get; private set; }
         private PlayerNetworkBehavior _playerNetworkBehavior;
         private string _playerName;
         private Canvas _canvas;
@@ -32,7 +32,8 @@ namespace Controller
         private BaseController aimTargetController;
         private BaseItem carryItem;
         private PlaceGridController _curPlaceGrid;
-
+        private PlayerCamera _playerCamera;
+        
         public PlayerController(GameObject gameObject) : base(gameObject)
         {
             _rb = transform.GetComponent<Rigidbody>();
@@ -47,11 +48,10 @@ namespace Controller
             if (init) return;
             init = true;
             this.isLocalPlayer = isLocalPlayer;
-            _virtualCamera = Object.FindObjectOfType<CinemachineVirtualCamera>();
+            
             if (isLocalPlayer)
             {
-                _virtualCamera.Follow = transform;
-                _virtualCamera.LookAt = transform;
+                _playerCamera = new PlayerCamera(this);
                 EventManager.Get().AddListener(Events.UPDATE, LocalPlayerUpdate);
                 _playerManager.AddLocalPlayer(this);
             }
@@ -66,9 +66,11 @@ namespace Controller
         {
             #region Move
 
+            float camRotY = _playerCamera.GetRotationY();
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
             Vector3 direction = new Vector3(moveHorizontal, 0, moveVertical);
+            direction = Quaternion.Euler(0, camRotY, 0) * direction;
             if (direction.magnitude > 0.2f)
             {
                 Vector3 movement = direction * moveSpeed * Time.deltaTime;
@@ -93,7 +95,7 @@ namespace Controller
                 ItemManager.Get().CreateItem(1);
             }
             
-            _canvas.transform.LookAt(_virtualCamera.transform);
+            // _canvas.transform.LookAt(_virtualCamera.transform);
 
             if (carryItem == null)
             {
@@ -213,7 +215,7 @@ namespace Controller
         
         private void OtherPlayerUpdate()
         {
-            _canvas.transform.LookAt(_virtualCamera.transform);
+            // _canvas.transform.LookAt(_virtualCamera.transform);
         }
 
         public void SetID(int id)

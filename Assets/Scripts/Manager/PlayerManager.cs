@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Controller;
 using Mirror;
+using Player;
 using UnityEngine;
 
 public class PlayerManager : Singleton<PlayerManager>

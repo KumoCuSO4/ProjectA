@@ -1,5 +1,6 @@
 ﻿using Controller;
 using Mirror;
+using Player;
 using UnityEngine;
 
 public class PlayerNetworkBehavior : NetworkBehaviour
@@ -12,7 +13,7 @@ public class PlayerNetworkBehavior : NetworkBehaviour
 
     private void OnPlayerNameChanged(string oldStr, string newStr)
     {
-        LogManager.LogError(oldStr, newStr);
+        // LogManager.LogError(oldStr, newStr);
         _playerController.OnPlayerNameChanged(oldStr, newStr);
     }
 

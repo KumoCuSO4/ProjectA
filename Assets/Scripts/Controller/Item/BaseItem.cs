@@ -1,4 +1,5 @@
 ﻿using Interface;
+using Player;
 using UnityEngine;
 
 namespace Controller.Item

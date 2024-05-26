@@ -3,6 +3,7 @@ using Controller;
 using kcp2k;
 using Manager;
 using Mirror;
+using Player;
 using UnityEngine;
 
 public class ServerManager : Singleton<ServerManager>

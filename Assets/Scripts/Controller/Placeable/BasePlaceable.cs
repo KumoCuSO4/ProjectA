@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Event;
 using Table;
 using UnityEditor.UI;
 using UnityEngine;
@@ -233,7 +234,13 @@ namespace Controller.Placeable
 
         public bool Place()
         {
-            return _placeGrid.Place(this);
+            if (_placeGrid.Place(this))
+            {
+                EventManager.Get().TriggerEvent(Events.ON_PLACE, id);
+                return true;
+            }
+
+            return false;
         }
 
         public PlaceGridController GetPlaceGrid()

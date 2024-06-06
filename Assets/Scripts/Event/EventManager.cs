@@ -9,19 +9,19 @@ namespace Event
     {
         public delegate void Func(params object[] values);
         
-        private const int MAX_PRI = 2;
-        private readonly Dictionary<Events, Delegate>[] _eventListeners = new Dictionary<Events, Delegate>[MAX_PRI];
+        
+        private readonly Dictionary<Events, Delegate>[] _eventListeners = new Dictionary<Events, Delegate>[(int)EventPriority.END];
     
         public EventManager()
         {
             // LogManager.Log("EventManager created");
-            for (int i = 0; i < MAX_PRI; i++)
+            for (int i = 0; i < (int)EventPriority.END; i++)
             {
                 _eventListeners[i] = new Dictionary<Events, Delegate>();
             }
         }
         
-        public bool AddListener<T>(Events eventType, Action<T> function, EventPriority priority = EventPriority.OUTER)
+        public bool AddListener<T>(Events eventType, Action<T> function, EventPriority priority = EventPriority.INNER)
         {
             int p = (int)priority;
             _eventListeners[p].TryAdd(eventType, null);
@@ -46,7 +46,7 @@ namespace Event
             return true;
         }
     
-        public bool AddListener(Events eventType, Action function, EventPriority priority = EventPriority.OUTER)
+        public bool AddListener(Events eventType, Action function, EventPriority priority = EventPriority.INNER)
         {
             int p = (int)priority;
             _eventListeners[p].TryAdd(eventType, null);
@@ -71,7 +71,7 @@ namespace Event
             return true;
         }
 
-        public void RemoveListener<T>(Events eventType, Action<T> function, EventPriority priority = EventPriority.OUTER)
+        public void RemoveListener<T>(Events eventType, Action<T> function, EventPriority priority = EventPriority.INNER)
         {
             int p = (int)priority;
             if (!_eventListeners[p].ContainsKey(eventType)) return;
@@ -84,7 +84,7 @@ namespace Event
             }
         }
     
-        public void RemoveListener(Events eventType, Action function, EventPriority priority = EventPriority.OUTER)
+        public void RemoveListener(Events eventType, Action function, EventPriority priority = EventPriority.INNER)
         {
             int p = (int)priority;
             if (!_eventListeners[p].ContainsKey(eventType)) return;
@@ -99,7 +99,7 @@ namespace Event
         
         public void TriggerEvent<T>(Events eventType, T parameter)
         {
-            for (int i = 0; i < MAX_PRI; i++)
+            for (int i = (int)EventPriority.END - 1; i >= 0 ; i--)
             {
                 if (!_eventListeners[i].TryGetValue(eventType, out var eventListener)) continue;
                 if (eventListener.GetType() != typeof(Action<T>))
@@ -128,7 +128,7 @@ namespace Event
     
         public void TriggerEvent(Events eventType)
         {
-            for (int i = 0; i < MAX_PRI; i++)
+            for (int i = (int)EventPriority.END - 1; i >= 0; i--)
             {
                 if (!_eventListeners[i].TryGetValue(eventType, out var eventListener)) continue;
                 if (eventListener.GetType() != typeof(Action))

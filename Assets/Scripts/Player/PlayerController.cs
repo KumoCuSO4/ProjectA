@@ -158,6 +158,23 @@ namespace Player
                     WindowManager.Get().CloseWindow("place_window");
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                TimeManager.Get().SetTimeScale(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                TimeManager.Get().SetTimeScale(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                TimeManager.Get().SetTimeScale(4);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                TimeManager.Get().SetTimeScale(8);
+            }
         }
 
         public PlaceGridController GetCurPlaceGrid()

@@ -11,4 +11,6 @@ public static class Const
     {
         GROUND = 6,
     }
+
+    public const float FLOAT_TOLERANCE = 1e-4f;
 }

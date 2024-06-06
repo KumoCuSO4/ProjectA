@@ -9,6 +9,8 @@ namespace Table
         public PlaceableTable()
         {
             data[1] = new PlaceableData(null, "placeable_1", 3, 2);
+            data[2] = new PlaceableData(null, "cashier", 2, 2);
+            data[3] = new PlaceableData(null, "goods_shelf", 3, 1);
         }
 
         public PlaceableData GetPlaceableData(int placeableID)

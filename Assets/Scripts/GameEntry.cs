@@ -1,6 +1,7 @@
 using Controller.Window;
 using Event;
 using Manager;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameEntry : MonoBehaviour
@@ -13,6 +14,7 @@ public class GameEntry : MonoBehaviour
     private ControllerManager _controllerManager;
     private ItemManager _itemManager;
     private WindowManager _windowManager;
+    
     void Start()
     {
         _playerManager = PlayerManager.Get();
@@ -28,6 +30,8 @@ public class GameEntry : MonoBehaviour
 
         _windowManager = WindowManager.Get();
         _windowManager.OpenWindow("connect_window");
+
+        transform.AddComponent<CoroutineHandler>();
         
         LogManager.Log("Game start");
     }
@@ -35,6 +39,11 @@ public class GameEntry : MonoBehaviour
     private void Update()
     {
         _eventManager.TriggerEvent(Events.UPDATE);
+    }
+    
+    private void FixedUpdate()
+    {
+        _eventManager.TriggerEvent(Events.FIXED_UPDATE);
     }
 
     private static GameEntry _instance;

@@ -20,15 +20,5 @@ namespace Table
         
     }
 
-    public class WindowData
-    {
-        public string name { private set; get; }
-        public int layer { private set; get; }
-
-        public WindowData(string name, int layer)
-        {
-            this.name = name;
-            this.layer = layer;
-        }
-    }
+    public record WindowData(string name, int layer);
 }

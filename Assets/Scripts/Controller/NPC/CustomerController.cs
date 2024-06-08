@@ -14,6 +14,7 @@ namespace Controller.NPC
         private float shoppingTime = 3f;
         private float payingTime = 2f;
         private float moveSpeed = 2f;
+        private float acceleration = 8f;
         private NavMeshAgent agent;
 
         public enum CustomerStatus
@@ -33,7 +34,7 @@ namespace Controller.NPC
             agent = gameObject.GetComponent<NavMeshAgent>();
             agent.stoppingDistance = 1f;
             agent.speed = moveSpeed * TimeManager.Get().timeScale;
-            
+            agent.acceleration = acceleration * TimeManager.Get().timeScale;
             Init();
         }
 
@@ -55,6 +56,7 @@ namespace Controller.NPC
         private void OnTimeScaleChange()
         {
             agent.speed = moveSpeed * TimeManager.Get().timeScale;
+            agent.acceleration = acceleration * TimeManager.Get().timeScale;
         }
         
         private void Update()

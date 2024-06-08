@@ -18,17 +18,5 @@ namespace Table
         
     }
 
-    public class ItemData
-    {
-        public string className { private set; get; }
-        public string prefabName { private set; get; }
-        public int value { private set; get; }
-
-        public ItemData(string className, string prefabName, int value)
-        {
-            this.className = className;
-            this.prefabName = prefabName;
-            this.value = value;
-        } 
-    }
+    public record ItemData(string className, string prefabName, int value);
 }

@@ -8,7 +8,7 @@ namespace Table
 
         public ItemTable()
         {
-            data[1] = new ItemData(null, "item_1", 10);
+            data[1] = new ItemData(null, "item_1", 10, 1, 20);
         }
 
         public ItemData GetItemData(int itemID)
@@ -18,5 +18,5 @@ namespace Table
         
     }
 
-    public record ItemData(string className, string prefabName, int value);
+    public record ItemData(string className, string prefabName, int value, int goodType = 0, int goodNum = 0);
 }

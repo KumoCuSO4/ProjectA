@@ -5,12 +5,14 @@ using Event;
 using Table;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.AI;
 using Object = UnityEngine.Object;
 
 namespace Controller.Placeable
 {
     public class BasePlaceable : BaseController
     {
+        #region data
         public int length { protected set; get; }
         public int width { protected set; get; }  // length -> x  width -> y
         
@@ -99,6 +101,9 @@ namespace Controller.Placeable
         private Dictionary<int, GameObject> indicators = new Dictionary<int, GameObject>();
         private Dictionary<int, Material> indicatorMaterials = new Dictionary<int, Material>();
         private GameObject indicatorsGo;
+        private NavMeshObstacle _navMeshObstacle;
+        
+        #endregion
         
         public BasePlaceable(GameObject gameObject, int tableID, PlaceGridController placeGrid) : base(gameObject)
         {
@@ -250,9 +255,12 @@ namespace Controller.Placeable
 
         public void SetPlaced(int placeID)
         {
+            LogManager.Log("place", placeID);
             status = Status.NORMAL;
             _collider.enabled = true;
             id = placeID;
+            _navMeshObstacle = gameObject.AddComponent<NavMeshObstacle>();
+            _navMeshObstacle.enabled = true;
             RemoveIndicators();
         }
         

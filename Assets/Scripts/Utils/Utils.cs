@@ -1,4 +1,5 @@
 ﻿using Controller;
+using Interface;
 using JetBrains.Annotations;
 using Player;
 using UnityEngine;
@@ -28,5 +29,12 @@ public static class Utils
             }
         };
         return go;
+    }
+
+    public static bool IsNull(object obj)
+    {
+        if (obj == null) return true;
+        if (obj is IMyDisposable disposable) return disposable.IsDisposed();
+        return false;
     }
 }

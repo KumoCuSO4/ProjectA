@@ -3,6 +3,7 @@ using Cinemachine;
 using Controller;
 using Controller.Item;
 using Event;
+using Interface;
 using Manager;
 using Mirror;
 using UnityEngine;
@@ -73,7 +74,7 @@ namespace Player
             direction = Quaternion.Euler(0, camRotY, 0) * direction;
             if (direction.magnitude > 0.2f)
             {
-                Vector3 movement = direction * moveSpeed * Time.deltaTime;
+                Vector3 movement = direction * moveSpeed * TimeManager.Get().GetDeltaTime();
                 Vector3 localPosition;
                 Quaternion localRotation;
                 transform.GetLocalPositionAndRotation(out localPosition, out localRotation);
@@ -94,43 +95,41 @@ namespace Player
             {
                 ItemManager.Get().CreateItem(1);
             }
-            
-            // _canvas.transform.LookAt(_virtualCamera.transform);
 
-            if (carryItem == null)
+            Ray ray = new Ray(transform.position, transform.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, aimDistance))
             {
-                Ray ray = new Ray(transform.position, transform.forward);
-                RaycastHit hit;
-    
-                if (Physics.Raycast(ray, out hit, aimDistance))
-                {
-                    GameObject go = hit.collider.gameObject;
-                    AimTarget(go);
-                }
-                else
-                {
-                    UnAimTarget();
-                }
+                GameObject go = hit.collider.gameObject;
+                AimTarget(go);
             }
             else
+            {
+                UnAimTarget();
+            }
+            
+            if (!Utils.IsNull(carryItem))
             {
                 carryItem.GetTransform().position = transform.position + transform.forward;
             }
             
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (carryItem == null && aimTargetController != null && aimTargetController is BaseItem item)
+                if (!Utils.IsNull(aimTargetController) && aimTargetController is IInteractable interactable)
                 {
-                    if (item.Carry(this))
+                    if (interactable.CanInteract(this) && interactable.Interact(this))
                     {
-                        carryItem = item;
-                        UnAimTarget();
+                        if (interactable is BaseItem item)
+                        {
+                            carryItem = item;
+                            UnAimTarget();
+                        }
                     }
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
-                if (carryItem != null && carryItem.Drop(this))
+                if (!Utils.IsNull(carryItem) && carryItem.Drop(this))
                 {
                     carryItem = null;
                 }
@@ -146,9 +145,9 @@ namespace Player
             if (Input.GetKeyDown(KeyCode.B))
             {
                 var placeWindow = WindowManager.Get().GetWindow("place_window");
-                if (placeWindow == null)
+                if (Utils.IsNull(placeWindow))
                 {
-                    if (_curPlaceGrid != null)
+                    if (!Utils.IsNull(_curPlaceGrid))
                     {
                         WindowManager.Get().OpenWindow("place_window", _curPlaceGrid);
                     }
@@ -184,6 +183,11 @@ namespace Player
 
         private void AimTarget(GameObject go)
         {
+            if (go != null && go.name == "model")
+            {
+                go = go.transform.parent.gameObject;
+            }
+
             if (aimTarget != go)
             {
                 if (aimTarget != null)
@@ -197,19 +201,27 @@ namespace Player
                     outline1.enabled = false;
                 }
 
+                var controller = ControllerManager.Get().GetController(go);
                 if (go != null)
                 {
-                    Outline outline2 = go.GetComponent<Outline>();
-                    if (outline2 == null)
+                    // LogManager.Log(go.name);
+                    if (!Utils.IsNull(controller) && controller is IInteractable interactable && interactable.CanInteract(this))
                     {
-                        outline2 = go.AddComponent<Outline>();
-                        outline2.OutlineColor = Color.red;
+                        aimTarget = go;
+                        aimTargetController = controller;
+                        
+                        Outline outline2 = go.GetComponent<Outline>();
+                        if (outline2 == null)
+                        {
+                            outline2 = go.AddComponent<Outline>();
+                            outline2.OutlineColor = Color.red;
+                        }
+                        outline2.enabled = true;
                     }
-                    outline2.enabled = true;
                 }
-
+                
                 aimTarget = go;
-                aimTargetController = ControllerManager.Get().GetController(go);
+                aimTargetController = controller;
             }
         }
 
@@ -261,6 +273,11 @@ namespace Player
             _playerName = newStr;
             transform.name = _playerName;
             _nameText.text = _playerName;
+        }
+
+        public BaseItem GetCarryItem()
+        {
+            return carryItem;
         }
     }
 }

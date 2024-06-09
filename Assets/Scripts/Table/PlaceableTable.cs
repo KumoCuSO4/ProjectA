@@ -10,7 +10,7 @@ namespace Table
         {
             data[1] = new PlaceableData(null, "placeable_1", "测试", 3, 2);
             data[2] = new PlaceableData(null, "cashier", "收银台", 2, 2);
-            data[3] = new PlaceableData(null, "goods_shelf","商品货架", 3, 1);
+            data[3] = new PlaceableData("BaseGoodsShelf", "goods_shelf","商品货架", 3, 1);
         }
 
         public PlaceableData GetPlaceableData(int placeableID)

@@ -55,6 +55,11 @@ namespace Controller.Scene
             return NavMeshBuilder.BuildNavMeshData(settings, sources, bounds, Vector3.zero, Quaternion.identity);
         }
 
+        public void RefreshNavMesh()
+        {
+            
+        }
+
         public void Exit()
         {
             Dispose();

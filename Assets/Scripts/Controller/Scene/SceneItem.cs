@@ -32,7 +32,7 @@ namespace Controller.Scene
             GameObject itemPrefab = Resources.Load<GameObject>("Prefabs/Item/" + itemData.prefabName);
             GameObject obj = Utils.AddChild(gameObject, itemPrefab);
             obj.transform.localPosition = new Vector3(0, 2, 0);
-            object[] constructorArgs = { obj };
+            object[] constructorArgs = {obj, itemID};
             BaseItem item = Activator.CreateInstance(type, constructorArgs) as BaseItem;
             _items.Add(item);
             return item;
